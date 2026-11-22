@@ -1,1 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ascensión Fake – Facial Analysis</title>
+<style>
+:root{--c:#19a8ff;--c2:#8fd6ff}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html,body{background:#000;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+body{min-height:100dvh;overflow-x:hidden}
+.bg{position:fixed;inset:0;overflow:hidden;pointer-events:none}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.38;animation:float 14s ease-in-out infinite}
+.o1{width:360px;height:360px;background:#0a4fb5;top:-100px;left:-120px}
+.o2{width:320px;height:320px;background:#08336f;bottom:-90px;right:-110px;animation-delay:-6s;opacity:.35}
+@keyframes float{50%{transform:translate(50px,60px) scale(1.15)}}
+.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(25,168,255,.09) 1px,transparent 1px),linear-gradient(90deg,rgba(25,168,255,.09) 1px,transparent 1px);background-size:38px 38px;-webkit-mask-image:radial-gradient(ellipse at 50% 35%,#000 20%,transparent 75%);mask-image:radial-gradient(ellipse at 50% 35%,#000 20%,transparent 75%);animation:pan 8s linear infinite}
+@keyframes pan{to{background-position:0 38px,38px 0}}
+main{position:relative;display:flex;flex-direction:column;align-items:center;min-height:100dvh;max-width:480px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 22px) 18px calc(env(safe-area-inset-bottom,0px) + 18px)}
+.bar{width:100%;height:40px;border-radius:999px;display:flex;align-items:center;gap:8px;padding:0 15px;font-size:12px;font-weight:700;color:var(--c);background:rgba(20,60,100,.25);border:1px solid rgba(25,168,255,.28);box-shadow:0 0 26px rgba(25,168,255,.18);backdrop-filter:blur(8px)}
+.bar svg{width:13px;height:13px;flex:none}
+.caret{width:1px;height:13px;background:var(--c);animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+#home{display:flex;flex-direction:column;align-items:center;width:100%;text-align:center}
+.badge{margin-top:26px;font-size:10px;font-weight:800;letter-spacing:.22em;padding:7px 14px;border-radius:999px;color:var(--c2);background:rgba(25,168,255,.08);border:1px solid rgba(25,168,255,.3)}
+.badge i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--c);margin-right:8px;animation:pulse 1.2s infinite}
+@keyframes pulse{50%{opacity:.25;transform:scale(1.6)}}
+h1{margin-top:16px;font-size:clamp(34px,10.5vw,48px);line-height:1.05;font-weight:900;letter-spacing:-.03em}
+h1 em{font-style:normal;background:linear-gradient(180deg,#f2f8ff,#3fa3ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{margin-top:12px;font-size:14px;line-height:1.5;color:rgba(190,220,245,.75);max-width:340px}
+.drop{position:relative;width:210px;height:210px;margin:30px 0 26px;cursor:pointer;display:grid;place-items:center}
+.ring{position:absolute;inset:0;border-radius:50%;border:2px dashed rgba(25,168,255,.55);animation:spin 18s linear infinite}
+.ring.r2{inset:14px;border:2px solid transparent;border-top-color:#19a8ff;border-bottom-color:rgba(25,168,255,.2);animation:spin 3.5s linear infinite;filter:drop-shadow(0 0 8px #19a8ff)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.core{position:relative;width:158px;height:158px;border-radius:50%;overflow:hidden;display:grid;place-items:center;background:radial-gradient(circle,rgba(25,168,255,.22),rgba(5,20,35,.9));border:1px solid rgba(143,214,255,.5);box-shadow:0 0 40px rgba(25,168,255,.45),inset 0 0 30px rgba(25,168,255,.25);transition:transform .3s}
+.drop:hover .core,.drop.over .core{transform:scale(1.05)}
+.core div{font-size:12px;color:var(--c2);line-height:1.35}
+.core b{display:block;font-size:44px;font-weight:200;line-height:1}
+.core img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none}
+.drop.has .core img{display:block}.drop.has .core div{display:none}
+button{font:inherit;border:0;cursor:pointer;color:#fff;border-radius:999px;padding:15px 22px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-size:13px}
+.main-btn{background:linear-gradient(135deg,#0b5fd0,#1b8fff);box-shadow:0 0 22px rgba(25,168,255,.4);width:min(100%,300px);position:relative;overflow:hidden}
+.main-btn:disabled{opacity:.3;box-shadow:none;cursor:not-allowed}
+.ghost{background:rgba(20,60,100,.25);border:1px solid rgba(25,168,255,.5);color:var(--c2);font-size:11px;padding:13px 16px}
+.lbl{margin-top:34px;font-size:10px;letter-spacing:.3em;color:rgba(25,168,255,.7)}
+.ladder{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.chip{font-size:12px;font-weight:700;padding:7px 12px;border-radius:8px;color:var(--c2);border:1px solid rgba(25,168,255,.35);background:rgba(25,168,255,.05)}
+.tiers{display:flex;justify-content:space-between;width:100%;margin-top:10px;font-size:10px;letter-spacing:.2em;color:rgba(160,200,230,.5)}
+.mini{display:flex;gap:10px;width:100%;margin-top:30px}
+.mini div{flex:1;padding:13px 6px;border-radius:12px;background:rgba(20,60,100,.2);border:1px solid rgba(25,168,255,.2);backdrop-filter:blur(6px)}
+.mini b{display:block;font-size:20px;color:#fff}.mini small{font-size:9px;letter-spacing:.14em;color:rgba(25,168,255,.7)}
+.steps{display:flex;gap:10px;width:100%;margin-top:22px;text-align:left}
+.steps div{flex:1;font-size:11px;line-height:1.4;color:rgba(190,220,245,.7)}
+.steps b{display:grid;place-items:center;width:24px;height:24px;margin-bottom:7px;border-radius:50%;background:rgba(25,168,255,.18);border:1px solid var(--c);color:var(--c);font-size:12px}
+#stage{display:none;flex-direction:column;align-items:center;width:calc(100% + 36px);margin:0 -18px}
+main.staged{padding-top:calc(env(safe-area-inset-top,0px) + 6px);padding-bottom:calc(env(safe-area-inset-bottom,0px) + 8px)}
+#cv{width:min(100vw,calc((100dvh - 92px)*9/16));height:auto;aspect-ratio:9/16;max-width:100%;border-radius:10px}
+.btns{display:none;gap:8px;margin-top:8px;flex-wrap:wrap;justify-content:center}.btns.on{display:flex}
+.btns .main-btn{width:auto;padding:13px 18px;font-size:11px}
+#cfgBtn{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 10px);right:10px;z-index:20;width:30px;height:30px;padding:0;font-size:16px;letter-spacing:0;border-radius:50%;background:rgba(20,60,100,.2);border:1px solid rgba(25,168,255,.18);color:rgba(143,214,255,.4)}
+#cfgBtn.on::after{content:"";position:absolute;top:4px;right:4px;width:6px;height:6px;border-radius:50%;background:var(--c)}
+#cfg{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 48px);right:10px;z-index:21;width:230px;padding:14px;border-radius:14px;background:rgba(4,10,18,.97);border:1px solid rgba(25,168,255,.3);box-shadow:0 0 30px rgba(0,0,0,.8)}
+#cfg[hidden]{display:none}
+#cfg .t{font-size:10px;letter-spacing:.16em;color:rgba(143,214,255,.8);margin-bottom:10px}
+#cfgRanks{display:flex;flex-wrap:wrap;gap:6px}
+.rk,#cfg .row button{padding:7px 10px;font-size:11px;letter-spacing:.04em;text-transform:none;font-weight:700;border-radius:8px;background:rgba(25,168,255,.06);border:1px solid rgba(25,168,255,.3);color:var(--c2)}
+.rk.sel{background:var(--c);color:#001428;border-color:var(--c)}
+#cfg label{display:block;margin-top:12px;font-size:11px;color:rgba(190,220,245,.75)}
+#cfg .row{display:flex;gap:6px;margin-top:12px}
+footer{margin-top:auto;padding-top:28px;text-align:center;font-size:11px;line-height:1.55;color:rgba(160,200,230,.55)}
+footer b{color:#d6e9ff}
+</style>
+</head>
+<body>
+<div class="bg"><i class="orb o1"></i><i class="orb o2"></i><div class="grid"></div></div>
+<main>
+  <div class="bar" id="bar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+    <span id="typed"></span><i class="caret"></i>
+  </div>
 
+  <section id="home">
+    <span class="badge"><i></i>PARODIA · 100% FALSO</span>
+    <h1>¿Qué tan <em>Adam</em><br>eres realmente?</h1>
+    <p class="sub">Sube una foto y nuestra “IA” te asignará un rango. Spoiler: es todo ficción.</p>
+
+    <div class="drop" id="drop">
+      <i class="ring"></i><i class="ring r2"></i>
+      <div class="core"><div><b>+</b>Toca para<br>subir tu foto</div><img id="thumb" alt="Tu foto"></div>
+    </div>
+    <input type="file" id="file" accept="image/*" hidden>
+    <button class="main-btn" id="go" disabled>Analizar</button>
+
+    <div class="lbl">LOS RANGOS</div>
+    <div class="ladder" id="ladder"></div>
+    <div class="tiers"><span>▼ BAJO</span><span>MEDIO</span><span>ALTO ▲</span></div>
+
+    <div class="mini">
+      <div><b>∞</b><small>CARAS ANALIZADAS</small></div>
+      <div><b>0</b><small>DATOS REALES</small></div>
+      <div><b>100%</b><small>PURA FICCIÓN</small></div>
+    </div>
+    <div class="steps">
+      <div><b>1</b>Sube una foto o lo que sea</div>
+      <div><b>2</b>Mira cómo “analiza”</div>
+      <div><b>3</b>Descarga el video del resultado</div>
+    </div>
+  </section>
+
+  <section id="stage">
+    <canvas id="cv" width="720" height="1280"></canvas>
+    <div class="btns" id="btns">
+      <button class="main-btn" id="vid">Descargar animación</button>
+      <button class="ghost" id="png">Imagen</button>
+      <button class="ghost" id="again">Otra foto</button>
+    </div>
+  </section>
+
+  <footer><b>⚠ Todo es falso.</b> Esta página es una parodia: no analiza nada realmente. Los puntajes y los rangos no significan nada. Tu foto nunca sale de tu dispositivo.</footer>
+</main>
+
+<button id="cfgBtn" aria-label="Ajustes">⋯</button>
+<div id="cfg" hidden>
+  <div class="t">RANGO PARA LA SIGUIENTE FOTO</div>
+  <div id="cfgRanks"></div>
+  <label><input type="checkbox" id="keep"> Repetir en cada foto</label>
+  <div class="row"><button id="cfgClear">Quitar</button><button id="cfgClose">Cerrar</button></div>
+</div>
+
+<script>
+// ====== CONFIG (edita aquí) ======
+const APP_NAME = "Ascensión Fake – Facial Analysis";
+// w = probabilidad relativa (solo cuando no hay rango forzado), min/max = rango de puntaje (de 8)
+const RANKS = [
+  {n:"Sub 5",     w:12, min:0.5, max:1.5, nivel:"Bajo"},
+  {n:"Sub 3",     w:18, min:1.5, max:3.0, nivel:"Bajo"},
+  {n:"LTN",       w:22, min:3.0, max:4.5, nivel:"Bajo"},
+  {n:"MTN",       w:20, min:4.5, max:5.5, nivel:"Medio"},
+  {n:"HTN",       w:14, min:5.5, max:6.5, nivel:"Medio"},
+  {n:"Chad",      w:10, min:6.5, max:7.5, nivel:"Alto"},
+  {n:"True Adam", w:4,  min:7.5, max:8.0, nivel:"Alto"}
+];
+// =================================
+const $=id=>document.getElementById(id);
+const W=720,H=1280,DUR=9,BLUE="#19a8ff",F='-apple-system,"Segoe UI",Roboto,Arial,sans-serif';
+const cv=$("cv"),c=cv.getContext("2d");
+let IMG=null,current=null,anim=null,ready=false,btnTimer=null,recorder=null,forced=null,keep=false;
+
+// ---- UI de inicio ----
+$("ladder").innerHTML=RANKS.map(r=>`<span class="chip">${r.n}</span>`).join("");
+(function type(i=0){$("typed").textContent=APP_NAME.slice(0,i);if(i<APP_NAME.length)setTimeout(()=>type(i+1),55)})();
+const drop=$("drop"),file=$("file");
+drop.onclick=()=>file.click();
+drop.ondragover=e=>{e.preventDefault();drop.classList.add("over")};
+drop.ondragleave=()=>drop.classList.remove("over");
+drop.ondrop=e=>{e.preventDefault();drop.classList.remove("over");load(e.dataTransfer.files[0])};
+file.onchange=()=>load(file.files[0]);
+function load(f){
+  if(!f||!f.type.startsWith("image/"))return;
+  const r=new FileReader();
+  r.onload=e=>{const im=new Image();im.onload=()=>{IMG=im;$("thumb").src=im.src;drop.classList.add("has");ready=true;$("go").disabled=false};im.src=e.target.result};
+  r.readAsDataURL(f);
+}
+
+// ---- utilidades ----
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const ease=x=>1-Math.pow(1-clamp(x),3);
+const lerp=(a,b,k)=>a+(b-a)*k;
+const seg=(t,a,b)=>clamp((t-a)/(b-a));
+const hx=c=>[1,3,5].map(i=>parseInt(c.slice(i,i+2),16));
+const mixh=(a,b,k)=>{const A=hx(a),B=hx(b);return "#"+A.map((v,i)=>Math.round(lerp(v,B[i],k)).toString(16).padStart(2,"0")).join("")};
+const rgba=(col,a)=>{const [r,g,b]=hx(col);return `rgba(${r},${g},${b},${a})`};
+const h=n=>{n=Math.sin(n*127.1+311.7)*43758.5453;return n-Math.floor(n)};
+function rr(x,y,w,hh,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+hh,r);c.arcTo(x+w,y+hh,x,y+hh,r);c.arcTo(x,y+hh,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath()}
+function cover(x,y,S,a=1){const m=Math.min(IMG.width,IMG.height);c.globalAlpha=a;c.drawImage(IMG,(IMG.width-m)/2,(IMG.height-m)/2,m,m,x,y,S,S);c.globalAlpha=1}
+const spaced=s=>s.split("").join(" ");
+
+function roll(){
+  let rk=RANKS[0];
+  if(forced){rk=RANKS.find(r=>r.n===forced)||rk;if(!keep)setForced(null)}
+  else{const tot=RANKS.reduce((a,r)=>a+r.w,0);let x=Math.random()*tot;for(const r of RANKS){if((x-=r.w)<0){rk=r;break}}}
+  const score=Math.min(8,Math.round((rk.min+Math.random()*(rk.max-rk.min))*10)/10);
+  let top=Math.max(.1,Math.pow((8-score)/8,2)*100);top=top<10?Math.round(top*10)/10:Math.round(top);
+  return {...rk,score,top};
+}
+
+// ---- puntos de la cara ----
+const PTS=[[.30,.39],[.38,.36],[.46,.39],[.54,.39],[.62,.36],[.70,.39],[.50,.52],[.43,.61],[.57,.61],[.38,.73],[.50,.75],[.62,.73],[.22,.55],[.29,.80],[.50,.91],[.71,.80],[.78,.55],[.50,.16]];
+const LINES=[[0,1,2],[3,4,5],[2,6,3],[7,6,8],[9,10,11],[12,13,14,15,16],[17,6]];
+const HUD=[["SYMMETRY",t=>(70+t*28).toFixed(1)+"%"],["CANTHAL TILT",t=>(t*9).toFixed(1)+"°"],["GONIAL ANGLE",t=>(110+t*25).toFixed(0)+"°"],["MIDFACE RATIO",t=>(.9+t*.25).toFixed(2)],["FWHR",t=>(1.7+t*.4).toFixed(2)]];
+
+// ---- dibujo de cada cuadro de la animación ----
+function draw(t){
+  const col=BLUE,pr=ease(seg(t,4.9,5.8)),acc=BLUE;
+  c.globalAlpha=1;c.fillStyle="#000";c.fillRect(0,0,W,H);
+  let g=c.createRadialGradient(360,600,0,360,600,650);g.addColorStop(0,rgba(acc,.2));g.addColorStop(1,rgba(acc,0));c.fillStyle=g;c.fillRect(0,0,W,H);
+  // partículas
+  for(let i=0;i<60;i++){const sp=12+h(i+9)*34,y=((h(i+5)*H-sp*t)%H+H)%H,r=1+h(i+3)*2.2;c.fillStyle=rgba(acc,.1+h(i+7)*.35);c.fillRect(h(i)*W,y,r,r)}
+  // barra superior
+  c.globalAlpha=ease(seg(t,0,.5));rr(80,96,560,60,30);c.fillStyle=rgba(BLUE,.1);c.fill();c.strokeStyle=rgba(BLUE,.35);c.lineWidth=2;c.stroke();
+  c.strokeStyle=BLUE;c.lineWidth=3;c.beginPath();c.arc(112,124,8,0,7);c.moveTo(118,130);c.lineTo(125,137);c.stroke();
+  const n=Math.floor(seg(t,.2,1.4)*APP_NAME.length);c.fillStyle=BLUE;c.font="700 22px "+F;c.textAlign="left";c.textBaseline="middle";
+  c.fillText(APP_NAME.slice(0,n)+(Math.floor(t*2)%2?"|":""),140,127);c.globalAlpha=1;
+  // geometría de la foto
+  const intro=ease(seg(t,0,.8)),m=Math.sin(seg(t,4.2,5.1)*Math.PI);
+  const S=lerp(560,200,pr)*lerp(.8,1,intro)*(1+.08*m),cx=360,cy=lerp(540,335,pr),x=cx-S/2,y=cy-S/2,rad=S*.05;
+  // anillo de impacto
+  const tb=seg(t,4.6,5.6);if(tb>0&&tb<1){c.strokeStyle=rgba(col,(1-tb)*.8);c.lineWidth=7;c.beginPath();c.arc(cx,540,lerp(80,720,ease(tb)),0,7);c.stroke()}
+  // foto
+  c.save();c.globalAlpha=intro;c.shadowColor=rgba(acc,.95);c.shadowBlur=S*.2;rr(x,y,S,S,rad);c.fillStyle="#07131d";c.fill();c.restore();
+  c.save();c.globalAlpha=intro;rr(x,y,S,S,rad);c.clip();
+  cover(x,y,S);
+  if(m>.02){for(const[dx,dy]of[[-1,0],[1,0],[0,-1],[0,1]])cover(x+dx*m*S*.05,y+dy*m*S*.05,S,.3);c.fillStyle=rgba("#bfe9ff",m*.4);c.fillRect(x,y,S,S)}
+  const ma=1-seg(t,4.3,4.9);
+  if(ma>0){
+    // línea de escaneo (2 pasadas)
+    if(t>.9&&t<3.5){const p=((t-.9)/1.3)%1,ys=y-30+(S+60)*p;g=c.createLinearGradient(0,ys-110,0,ys);g.addColorStop(0,rgba(BLUE,0));g.addColorStop(1,rgba(BLUE,.45));c.fillStyle=g;c.fillRect(x,ys-110,S,110);c.fillStyle="#d8f3ff";c.shadowColor=BLUE;c.shadowBlur=18;c.fillRect(x,ys-1.5,S,3);c.shadowBlur=0}
+    // puntos y líneas
+    const k=seg(t,2.4,4.1)*PTS.length;c.globalAlpha=ma;c.strokeStyle="#bfe9ff";c.lineWidth=1.6;c.shadowColor=BLUE;c.shadowBlur=8;
+    for(const L of LINES)for(let i=0;i<L.length-1;i++)if(L[i+1]<k||(L[i]<k&&L[i+1]<k)){c.beginPath();c.moveTo(x+PTS[L[i]][0]*S,y+PTS[L[i]][1]*S);c.lineTo(x+PTS[L[i+1]][0]*S,y+PTS[L[i+1]][1]*S);c.stroke()}
+    for(let i=0;i<PTS.length;i++)if(i<k){const px=x+PTS[i][0]*S,py=y+PTS[i][1]*S,pl=(t*3+i*.4)%1;c.fillStyle="#fff";c.beginPath();c.arc(px,py,3.5,0,7);c.fill();c.strokeStyle=rgba("#ffffff",.6*(1-pl));c.beginPath();c.arc(px,py,3.5+pl*9,0,7);c.stroke()}
+  }
+  c.restore();c.shadowBlur=0;
+  rr(x,y,S,S,rad);c.strokeStyle=mixh("#8fd6ff",col,pr);c.lineWidth=3;c.globalAlpha=intro;c.stroke();c.globalAlpha=1;
+  // esquinas
+  const d=ease(seg(t,.3,1))*28*(1-seg(t,4.3,4.8));
+  if(d>.5){c.strokeStyle=BLUE;c.lineWidth=4;c.shadowColor=BLUE;c.shadowBlur=10;const L=38;
+    for(const[sx,sy]of[[-1,-1],[1,-1],[-1,1],[1,1]]){const px=cx+sx*(S/2+d),py=cy+sy*(S/2+d);c.beginPath();c.moveTo(px-sx*L,py);c.lineTo(px,py);c.lineTo(px,py-sy*L);c.stroke()}c.shadowBlur=0}
+  // ANALYZING + progreso + HUD
+  const va=ease(seg(t,.9,1.3))*(1-seg(t,4.3,4.7));
+  if(va>0){
+    c.globalAlpha=va;c.textAlign="center";c.fillStyle=BLUE;c.font="700 20px "+F;c.fillText(spaced("ANALYZING")+".".repeat(1+Math.floor(t*3)%3),360,880);
+    c.fillStyle=rgba(BLUE,.18);c.fillRect(130,904,460,3);c.fillStyle=BLUE;c.shadowColor=BLUE;c.shadowBlur=10;c.fillRect(130,904,460*seg(t,.9,4.2),3);c.shadowBlur=0;
+    HUD.forEach(([lb,f],i)=>{const a=ease(seg(t,1.2+i*.35,1.6+i*.35)),yy=956+i*42,v=h(i*7+Math.floor(Math.min(t,4)*9));
+      c.globalAlpha=va*a;c.textAlign="left";c.font="600 17px monospace";c.fillStyle=rgba(BLUE,.8);c.fillText(lb,130,yy);
+      c.textAlign="right";c.fillStyle="#fff";c.fillText(f(v),590,yy);
+      c.fillStyle=rgba(BLUE,.15);c.fillRect(130,yy+14,460,2);c.fillStyle=rgba(BLUE,.7);c.fillRect(130,yy+14,460*(.3+v*.65),2)});
+    c.globalAlpha=1;
+  }
+  // ===== resultado =====
+  const ra=ease(seg(t,4.95,5.3));
+  if(ra>0){
+    c.textAlign="center";const pulse=.75+.25*Math.sin(t*3);
+    g=c.createRadialGradient(360,650,0,360,650,380);g.addColorStop(0,rgba(col,.28*ra));g.addColorStop(1,rgba(col,0));c.save();c.translate(0,0);c.fillStyle=g;c.fillRect(0,480,W,360);c.restore();
+    c.globalAlpha=ra;c.fillStyle=rgba(col,.85);c.font="700 22px "+F;c.fillText(spaced("RATING"),360,500);
+    const sc=seg(t,5,6.1),txt=[...current.n].map((ch,i)=>ch===" "?" ":(sc>=(i+1)/current.n.length?ch:"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"[Math.floor(h(i*13+Math.floor(t*24)*7)*62)])).join("");
+    let fs=170;c.font="900 "+fs+"px "+F;while(c.measureText(current.n).width>650){fs-=6;c.font="900 "+fs+"px "+F}
+    c.shadowColor=rgba(col,.95);c.shadowBlur=45*pulse;c.fillStyle=col;c.fillText(txt,360,655);c.fillText(txt,360,655);
+    c.shadowBlur=0;c.fillStyle=rgba("#ffffff",.25);c.fillText(txt,360,651);
+    // tarjetas
+    const vals=[["PUNTAJE",(current.score*ease(seg(t,5.8,6.8))).toFixed(1)+"/8"],["NIVEL",t>6.3?current.nivel:"…"],["TOP",(()=>{const v=lerp(100,current.top,ease(seg(t,5.8,6.9)));return(current.top<10?v.toFixed(1):Math.round(v))+"%"})()]];
+    vals.forEach(([lb,v],i)=>{const d0=5.7+i*.2,k=ease(seg(t,d0,d0+.5)),bx=30+i*225,by=790+20*(1-k);c.globalAlpha=k;
+      rr(bx,by,210,140,18);c.fillStyle=rgba(col,.1);c.fill();c.strokeStyle=rgba(col,.4);c.lineWidth=2;c.stroke();
+      c.fillStyle=rgba(col,.85);c.font="700 15px "+F;c.fillText(spaced(lb),bx+105,by+36);
+      c.fillStyle="#fff";c.font="800 44px "+F;c.fillText(v,bx+105,by+88);c.fillStyle=col;c.fillRect(bx+30,by+116,150,4)});
+    c.globalAlpha=1;
+  }
+}
+
+// ---- bucle de animación ----
+function loop(now){
+  if(anim){
+    const t=(now-anim.start)/1000;
+    if(anim.rec&&t>DUR+.4)finishRec();
+    draw(anim.rec?Math.min(t,DUR+.4):t);
+  }
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+$("go").onclick=()=>{
+  if(!ready)return;
+  current=roll();
+  $("home").style.display="none";$("bar").style.display="none";$("stage").style.display="flex";document.querySelector("main").classList.add("staged");
+  $("btns").classList.remove("on");window.scrollTo(0,0);
+  anim={start:performance.now(),rec:false};
+  clearTimeout(btnTimer);btnTimer=setTimeout(()=>$("btns").classList.add("on"),(DUR-1.2)*1000);
+};
+$("again").onclick=()=>{
+  clearTimeout(btnTimer);anim=null;
+  $("stage").style.display="none";document.querySelector("main").classList.remove("staged");$("home").style.display="flex";$("bar").style.display="flex";
+  drop.classList.remove("has");$("thumb").removeAttribute("src");IMG=null;ready=false;$("go").disabled=true;file.value="";
+  setTimeout(()=>file.click(),60);
+};
+
+// ---- panel de rango para la siguiente foto ----
+function setForced(v){forced=v;$("cfgBtn").classList.toggle("on",!!v);document.querySelectorAll(".rk").forEach(b=>b.classList.toggle("sel",b.dataset.n===v))}
+$("cfgRanks").innerHTML=RANKS.map(r=>`<button class="rk" data-n="${r.n}">${r.n}</button>`).join("");
+$("cfgRanks").onclick=e=>{const b=e.target.closest(".rk");if(b)setForced(forced===b.dataset.n?null:b.dataset.n)};
+$("cfgBtn").onclick=()=>{$("cfg").hidden=!$("cfg").hidden};
+$("cfgClose").onclick=()=>{$("cfg").hidden=true};
+$("cfgClear").onclick=()=>{setForced(null);keep=false;$("keep").checked=false};
+$("keep").onchange=e=>{keep=e.target.checked};
+
+// ---- descargar imagen del resultado ----
+function save(blob,name){const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000)}
+$("png").onclick=()=>{if(!current||anim&&anim.rec)return;draw(DUR+1);cv.toBlob(b=>save(b,"resultado-parodia.png"),"image/png")};
+
+// ---- descargar la animación como video ----
+let chunks=[],mime="";
+$("vid").onclick=()=>{
+  if(!window.MediaRecorder||!cv.captureStream){alert("Tu navegador no permite grabar video desde la página. Prueba con Chrome o Safari actualizado.");return}
+  mime=["video/mp4;codecs=avc1","video/mp4","video/webm;codecs=vp9","video/webm;codecs=vp8","video/webm"].find(t=>MediaRecorder.isTypeSupported(t));
+  if(!mime){alert("Tu navegador no soporta ningún formato de video para grabar.");return}
+  chunks=[];recorder=new MediaRecorder(cv.captureStream(30),{mimeType:mime,videoBitsPerSecond:6e6});
+  recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
+  recorder.onstop=()=>{save(new Blob(chunks,{type:mime.split(";")[0]}),"analisis-parodia."+(mime.includes("mp4")?"mp4":"webm"));$("vid").disabled=false;$("vid").textContent="Descargar animación"};
+  $("vid").disabled=true;$("vid").textContent="Grabando… no cambies de pestaña";
+  recorder.start();anim={start:performance.now(),rec:true};
+};
+function finishRec(){anim={start:performance.now()-(DUR+2)*1000,rec:false};if(recorder&&recorder.state!=="inactive")recorder.stop()}
+</script>
+</body>
+</html>
